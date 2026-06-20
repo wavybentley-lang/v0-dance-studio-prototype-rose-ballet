@@ -25,12 +25,12 @@ const dancingScript = Dancing_Script({
   display: 'swap',
 })
 
-const siteUrl = 'https://v0-dance-studio-prototype-imperial.vercel.app'
+const siteUrl = 'https://v0-dance-studio-prototype-rose-ball.vercel.app'
 const siteName = brand.name
 const siteTitle = 'Rose Ballet | Scuola di Danza'
 const siteDescription =
   'Rose Ballet e una scuola di danza diretta da Melania e Rossella Mellino, con percorsi per bambini, ragazzi e adulti in un ambiente professionale e stimolante.'
-const ogImage = `${siteUrl}/imperial%20ballet/og.jpg`
+const ogImage = `${siteUrl}/roseballet/og.jpg`
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
