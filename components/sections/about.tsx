@@ -1,7 +1,6 @@
 "use client"
 
 import Image from "next/image"
-import { useEffect, useRef, useState } from "react"
 
 type AboutSectionProps = {
   isVisible: boolean
@@ -11,19 +10,6 @@ type AboutSectionProps = {
 }
 
 export function AboutSection({ isVisible, setSectionRef }: AboutSectionProps) {
-  const imageRef = useRef<HTMLDivElement>(null)
-  const [imageScale, setImageScale] = useState(false)
-
-  useEffect(() => {
-    if (!imageRef.current) return
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setImageScale(true); observer.disconnect() } },
-      { threshold: 0.3 },
-    )
-    observer.observe(imageRef.current)
-    return () => observer.disconnect()
-  }, [])
-
   return (
     <section
       id="chi-siamo"
@@ -33,13 +19,9 @@ export function AboutSection({ isVisible, setSectionRef }: AboutSectionProps) {
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
-          <div
-            ref={imageRef}
-            className={`transition-transform duration-1000 ${imageScale ? "scale-105" : "scale-100"}`}
-            style={{ transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-          >
+          <div>
             <div className="relative mx-auto aspect-[4/5] w-full max-w-[34rem] overflow-hidden rounded-sm border border-border bg-secondary">
-              <Image src="/roseballet/chisiamo.jpg" alt="Rose Ballet chi siamo" fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
+              <Image src="/roseballet/chisiamo.jpg" alt="Rose Ballet chi siamo" fill quality={72} sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
             </div>
           </div>
           <div className="mx-auto flex max-w-xl flex-col justify-center self-center lg:mx-0 lg:py-6">

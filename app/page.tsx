@@ -13,9 +13,14 @@ import { TestimonialsSection } from "@/components/sections/testimonials"
 import { FloatingActions } from "@/components/site/floating-actions"
 import { Footer } from "@/components/site/footer"
 import { Navigation } from "@/components/site/navigation"
+import { useIsMobile } from "@/hooks/use-mobile"
+import { useReducedMotion } from "@/hooks/use-reduced-motion"
 import { navLinks } from "@/lib/site-config"
 
 export default function DanceStudioTemplate() {
+  const isMobile = useIsMobile()
+  const prefersReducedMotion = useReducedMotion()
+  const enableAmbientMotion = !isMobile && !prefersReducedMotion
   const [isScrolled, setIsScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set())
@@ -47,11 +52,12 @@ export default function DanceStudioTemplate() {
   }, [])
 
   useEffect(() => {
+    if (!enableAmbientMotion) return
     let raf: number
     const handleMouseMove = (e: MouseEvent) => { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { setMouseX(e.clientX / window.innerWidth); setMouseY(e.clientY / window.innerHeight) }) }
     window.addEventListener("mousemove", handleMouseMove, { passive: true })
     return () => { window.removeEventListener("mousemove", handleMouseMove); cancelAnimationFrame(raf) }
-  }, [])
+  }, [enableAmbientMotion])
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -62,7 +68,7 @@ export default function DanceStudioTemplate() {
       let best: string | null = null; let bestRatio = 0
       intersectingRef.current.forEach((ratio, id) => { if (ratio > bestRatio) { bestRatio = ratio; best = id } })
       setActiveSection(best)
-    }, { threshold: [0.1, 0.25, 0.5] })
+    }, { threshold: 0.2, rootMargin: "-10% 0px -10% 0px" })
     Object.values(sectionRefs.current).forEach((ref) => { if (ref) observer.observe(ref) })
     return () => observer.disconnect()
   }, [])
@@ -79,7 +85,7 @@ export default function DanceStudioTemplate() {
   return (
     <div className="min-h-screen bg-background text-foreground" style={{ background: "radial-gradient(circle at 12% 18%, rgba(192,21,42,0.10), transparent 28%), radial-gradient(circle at 88% 42%, rgba(139,14,30,0.10), transparent 32%), var(--background)" }}>
       <Navigation navLinks={navLinks} activeSection={activeSection} isScrolled={isScrolled} mobileMenuOpen={mobileMenuOpen} setMobileMenuOpen={setMobileMenuOpen} />
-      <HeroSection mouseX={mouseX} mouseY={mouseY} />
+      <HeroSection mouseX={mouseX} mouseY={mouseY} enableAmbientMotion={enableAmbientMotion} />
       <AboutSection isVisible={visibleSections.has("chi-siamo")} setSectionRef={setSectionRef} bioOpen={bioOpen} setBioOpen={setBioOpen} />
       <ClassesSection isVisible={visibleSections.has("corsi")} setSectionRef={setSectionRef} coursesExpanded={coursesExpanded} setCoursesExpanded={setCoursesExpanded} />
       <CtaBanner eyebrow="Scuola di Danza diretta da Melania e Rossella Mellino" text="La prima lezione &egrave; gratuita &mdash; vieni a trovarci" buttonLabel="Prenota Ora" />

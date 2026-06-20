@@ -63,8 +63,8 @@
 }
 
 @keyframes clip-reveal {
-  0% { clip-path: inset(100% 0 0 0); filter: blur(8px); opacity: 0; }
-  100% { clip-path: inset(0 0 0 0); filter: blur(0px); opacity: 1; }
+  0% { transform: translateY(18px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
 }
 
 @keyframes scroll-dot {
@@ -149,6 +149,26 @@ html {
   html { scroll-behavior: auto; }
 }
 
+@media (max-width: 767px) {
+  html { scroll-behavior: auto; }
+
+  .animate-pulse-glow,
+  .animate-pulse-glow-white,
+  .animate-gradient-shift,
+  .animate-scroll-dot,
+  .animate-border-glow,
+  .animate-badge-bounce,
+  .grain-overlay::after {
+    animation: none !important;
+  }
+
+  .animate-clip-reveal,
+  .ken-burns-hover:hover img {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
 /* Floating label */
 .floating-label-group { position: relative; }
 .floating-label-group input:focus + label,
@@ -170,25 +190,6 @@ html {
   pointer-events: none;
   transform-origin: left center;
   transition: transform 0.2s ease, color 0.2s ease;
-}
-
-/* 3D tilt card */
-.tilt-card {
-  transform-style: preserve-3d;
-  perspective: 800px;
-}
-.tilt-card .tilt-spotlight {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.08) 0%, transparent 60%);
-  z-index: 1;
-}
-.tilt-card:hover .tilt-spotlight {
-  opacity: 1;
 }
 
 /* Ken Burns gallery hover */

@@ -1,7 +1,8 @@
 "use client"
 
 import { ChevronRight, MessageCircle } from "lucide-react"
-import { useEffect, useRef } from "react"
+import Image from "next/image"
+import { useEffect, useRef, useState } from "react"
 
 import { brand, stats } from "@/lib/site-config"
 import { useCounter } from "@/hooks/use-counter"
@@ -31,13 +32,36 @@ function StatCounter({ stat }: { stat: typeof stats[number] }) {
   )
 }
 
-export function HeroSection({ mouseX = 0.5, mouseY = 0.5 }: { mouseX?: number; mouseY?: number }) {
+export function HeroSection({
+  mouseX = 0.5,
+  mouseY = 0.5,
+  enableAmbientMotion = true,
+}: {
+  mouseX?: number
+  mouseY?: number
+  enableAmbientMotion?: boolean
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const sectionRef = useRef<HTMLElement>(null)
   const mouseRef = useRef({ x: mouseX, y: mouseY })
+  const [isHeroInView, setIsHeroInView] = useState(true)
 
   useEffect(() => { mouseRef.current = { x: mouseX, y: mouseY } }, [mouseX, mouseY])
 
   useEffect(() => {
+    const section = sectionRef.current
+    if (!section || !enableAmbientMotion) return
+
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsHeroInView(entry.isIntersecting)
+    }, { threshold: 0.05 })
+
+    observer.observe(section)
+    return () => observer.disconnect()
+  }, [enableAmbientMotion])
+
+  useEffect(() => {
+    if (!enableAmbientMotion || !isHeroInView) return
     const canvas = canvasRef.current
     if (!canvas) return
     const ctx = canvas.getContext("2d")
@@ -59,7 +83,7 @@ export function HeroSection({ mouseX = 0.5, mouseY = 0.5 }: { mouseX?: number; m
       return { x: bx, y: forceBottom ? canvas.height + 40 : rand(-40, canvas.height + 40), r: rand(8, 38), speedY: rand(0.18, 0.55), speedX: rand(-0.12, 0.12), alpha: rand(0.04, 0.18), colorTemplate: COLORS[Math.floor(Math.random() * COLORS.length)], wobble: rand(0, Math.PI * 2), wobbleSpeed: rand(0.004, 0.014), baseX: bx }
     }
 
-    const bubbles: Bubble[] = Array.from({ length: 38 }, () => createBubble())
+    const bubbles: Bubble[] = Array.from({ length: 18 }, () => createBubble())
     let raf: number
 
     const drawBubble = (b: Bubble) => {
@@ -87,15 +111,24 @@ export function HeroSection({ mouseX = 0.5, mouseY = 0.5 }: { mouseX?: number; m
     animate()
     window.addEventListener("resize", resize)
     return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", resize) }
-  }, [])
+  }, [enableAmbientMotion, isHeroInView])
 
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden" style={{ background: "radial-gradient(ellipse at 70% 30%, #5C1535 0%, #3D0D26 50%, #250818 100%)" }}>
-      <canvas ref={canvasRef} id="bokehCanvas" className="pointer-events-none absolute inset-0 z-[1] h-full w-full" />
+    <section ref={sectionRef} className="relative flex min-h-screen items-center overflow-hidden" style={{ background: "radial-gradient(ellipse at 70% 30%, #5C1535 0%, #3D0D26 50%, #250818 100%)" }}>
+      {enableAmbientMotion && <canvas ref={canvasRef} id="bokehCanvas" className="pointer-events-none absolute inset-0 z-[1] h-full w-full" />}
       <div className="grain-overlay absolute inset-0 z-[2] pointer-events-none" />
       <div className="absolute inset-0 z-0" style={{ background: "radial-gradient(ellipse at 75% 25%, rgba(192,21,42,0.22) 0%, rgba(139,14,30,0.12) 40%, transparent 65%), linear-gradient(135deg, rgba(15,15,15,0.98) 0%, rgba(22,22,22,0.95) 100%)" }} />
       <div className="absolute inset-0 z-0" style={{ background: "radial-gradient(circle at 15% 80%, rgba(192,21,42,0.08) 0%, transparent 30%), radial-gradient(circle at 90% 15%, rgba(139,14,30,0.10) 0%, transparent 35%)" }} />
-      <div className="absolute inset-y-0 right-0 z-0 w-full [background-position:center_8%] sm:[background-position:center_15%] lg:w-[62%]" style={{ backgroundImage: "url('/roseballet/hero.jpg')", backgroundPosition: "center 15%", backgroundSize: "cover" }}>
+      <div className="absolute inset-y-0 right-0 z-0 w-full overflow-hidden sm:[background-position:center_15%] lg:w-[62%]">
+        <Image
+          src="/roseballet/hero.jpg"
+          alt="Rose Ballet hero"
+          fill
+          priority
+          quality={72}
+          sizes="(max-width: 1024px) 100vw, 62vw"
+          className="object-cover [object-position:center_15%]"
+        />
         <div className="pointer-events-none absolute inset-0 z-[2]" style={{ background: ["linear-gradient(to right, #0F0F0F 0%, #0F0F0F 2%, rgba(15,15,15,0.95) 15%, rgba(15,15,15,0.6) 35%, rgba(15,15,15,0.0) 55%)", "linear-gradient(to left, #0F0F0F 0%, rgba(15,15,15,0.95) 8%, rgba(15,15,15,0.4) 22%, transparent 40%)", "linear-gradient(to bottom, #0F0F0F 0%, rgba(15,15,15,0.8) 8%, transparent 25%)", "linear-gradient(to top, #0F0F0F 0%, rgba(15,15,15,0.9) 12%, rgba(15,15,15,0.3) 28%, transparent 45%)"].join(", ") }} />
       </div>
       <div className="relative z-10 ml-0 max-w-7xl px-4 pt-40 pb-24 text-left sm:px-6 sm:pt-44 sm:pb-28 lg:mx-auto lg:w-[44%] lg:max-w-[34rem] lg:-translate-x-24 lg:px-8 lg:pt-48 lg:pb-16">

@@ -33,7 +33,7 @@ export function GallerySection({ isVisible, setSectionRef, enlargedPhoto, setEnl
             {featuredGalleryPhotos.length > 0
               ? featuredGalleryPhotos.map((image) => (
                   <button key={image.src} onClick={() => handleOpen(image.src)} className="ken-burns-hover group relative aspect-square w-full cursor-zoom-in overflow-hidden rounded-sm">
-                    <Image src={image.src} alt={image.alt} fill sizes="(max-width: 640px) 100vw, 33vw" className="object-cover transition-transform duration-500 group-hover:scale-110" />
+                    <Image src={image.src} alt={image.alt} fill quality={70} sizes="(max-width: 640px) 100vw, 33vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
                     <div className="absolute inset-0 bg-black/20 transition-colors duration-500 group-hover:bg-black/0" />
                   </button>
                 ))
@@ -42,7 +42,7 @@ export function GallerySection({ isVisible, setSectionRef, enlargedPhoto, setEnl
         </div>
       </section>
       {enlargedPhoto && (
-        <div className={`fixed inset-0 z-[10500] flex items-center justify-center transition-all duration-300 ${lightboxOpen ? "bg-black/95 backdrop-blur-xl" : "bg-black/0 backdrop-blur-none"}`} onClick={handleClose}>
+        <div className={`fixed inset-0 z-[10500] flex items-center justify-center transition-all duration-300 ${lightboxOpen ? "bg-black/95" : "bg-black/0"}`} onClick={handleClose}>
           <button onClick={handleClose} className={`fixed top-6 right-6 z-[10510] text-3xl font-light text-foreground transition-all duration-300 hover:opacity-70 ${lightboxOpen ? "translate-y-0 opacity-100" : "-translate-y-4 opacity-0"}`} aria-label="Close photo"><X size={32} /></button>
           <div className={`relative h-[90vh] w-[90vw] transition-all duration-300 ${lightboxOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"}`} style={{ transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)" }}>
             <Image src={enlargedPhoto} alt="Enlarged photo" fill className="object-contain" sizes="90vw" />

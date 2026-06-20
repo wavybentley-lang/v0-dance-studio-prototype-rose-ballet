@@ -4,9 +4,8 @@ import { useState } from "react"
 
 import {
   pricingCards, pricingHighlights, salaArmoniaSchedule,
-  scheduleBookingServices, scheduleContactInfo, type ScheduleDay,
+  scheduleBookingServices, type ScheduleDay,
 } from "@/lib/site-config"
-import { useStagger } from "@/hooks/use-stagger"
 
 type AnimatedSectionProps = {
   isVisible: boolean
@@ -27,7 +26,7 @@ function ScheduleCard({ title, subtitle, schedule }: { title: string; subtitle: 
             </button>
           ))}
         </div>
-        <div className="animate-in fade-in slide-in-from-bottom-2 mt-4 space-y-3 duration-500">
+        <div className="mt-4 space-y-3">
           {schedule[activeDayIndex].classes.map((classItem) => (
             <div key={`${classItem.time}-${classItem.name}`} className="grid grid-cols-[92px_1fr] items-baseline gap-3 border-b border-border/30 pb-3 last:border-0 last:pb-0">
               <span className="text-right font-sans text-[11px] font-bold text-primary">{classItem.time}</span>
@@ -76,9 +75,8 @@ export function ScheduleSection({ isVisible, setSectionRef }: AnimatedSectionPro
 }
 
 export function PricingSection({ isVisible, setSectionRef }: AnimatedSectionProps) {
-  const { ref: staggerRef, visibleCount } = useStagger(pricingCards.length, 120)
   return (
-    <section id="prezzi" ref={(element) => { setSectionRef("prezzi", element); if (staggerRef) (staggerRef as React.MutableRefObject<HTMLElement | null>).current = element }} style={{ background: "radial-gradient(ellipse at 85% 40%, #161616 0%, #111111 60%, #080808 100%)" }} className={`bg-card py-24 transition-all duration-700 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"}`}>
+    <section id="prezzi" ref={(element) => { setSectionRef("prezzi", element) }} style={{ background: "radial-gradient(ellipse at 85% 40%, #161616 0%, #111111 60%, #080808 100%)" }} className={`bg-card py-24 transition-all duration-700 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"}`}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-16 px-4 text-left lg:px-0 lg:text-center">
           <h2 className="mb-4 text-left font-serif text-4xl font-bold text-foreground sm:text-5xl lg:text-center">Iscrizioni & Prezzi</h2>
@@ -88,7 +86,7 @@ export function PricingSection({ isVisible, setSectionRef }: AnimatedSectionProp
           {pricingCards.map((card, index) => {
             const Icon = card.Icon
             return (
-              <div key={card.title} className={`rounded-sm border border-border bg-card p-6 transition-all duration-500 hover:border-primary ${index < visibleCount ? "translate-y-0 opacity-100" : "translate-y-5 opacity-0"}`} style={{ transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)" }}>
+              <div key={card.title} className="rounded-sm border border-border bg-card p-6 transition-colors duration-300 hover:border-primary">
                 <Icon size={32} className="mb-4 text-primary" />
                 <h3 className="mb-3 font-serif text-lg font-bold text-foreground">{card.title}</h3>
                 <p className="text-sm leading-relaxed text-muted-foreground">{card.description}</p>

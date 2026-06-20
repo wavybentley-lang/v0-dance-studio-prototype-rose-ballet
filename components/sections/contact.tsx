@@ -36,7 +36,7 @@ export function ContactSection({ isVisible, setSectionRef, formSubmitted, setFor
   return (
     <section id="contatti" ref={(element) => setSectionRef("contatti", element)} style={{ background: "radial-gradient(ellipse at 30% 70%, #141414 0%, #0F0F0F 55%, #0A0A0A 100%)" }} className={`relative border-t border-border bg-[#050505] transition-all duration-700 ${courseDropdownOpen ? "z-[10000]" : "z-10"} ${isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"}`}>
       <div className="relative overflow-hidden py-24">
-        <Image src="/contactformimage.jpg" alt="" fill sizes="100vw" className="pointer-events-none object-cover object-center opacity-55" style={{ maskImage: "linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0.2) 100%)" }} aria-hidden="true" />
+        <Image src="/contactformimage.jpg" alt="" fill quality={70} sizes="100vw" className="pointer-events-none object-cover object-center opacity-55" style={{ maskImage: "linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0.2) 100%)" }} aria-hidden="true" />
         <div className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.85) 75%, #050505 100%)" }} />
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 px-4 text-left lg:px-0 lg:text-center">

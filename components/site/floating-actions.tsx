@@ -23,7 +23,7 @@ export function FloatingActions({ whatsappHover, setWhatsappHover, cookieVisible
 
   return (
     <>
-      <div className="fixed right-0 bottom-0 left-0 z-[80] flex h-16 items-center border-t border-primary/25 bg-[#12060E]/98 px-3 shadow-[0_-10px_30px_rgba(0,0,0,0.45)] backdrop-blur-md md:hidden">
+      <div className="fixed right-0 bottom-0 left-0 z-[80] flex h-16 items-center border-t border-primary/25 bg-[#12060E]/98 px-3 shadow-[0_-10px_30px_rgba(0,0,0,0.45)] md:hidden">
         <div className="flex w-full gap-2">
           <a href={brand.phoneHref} className="flex flex-1 items-center justify-center gap-2 rounded-full border border-primary/30 bg-[#21100B] px-4 py-3 font-semibold text-[#F5EDD8] transition-colors hover:border-primary/55 hover:bg-[#2B150E]"><Phone size={18} />Chiamaci</a>
           <a href="#contatti" className="flex flex-1 items-center justify-center rounded-full bg-primary px-4 py-3 font-bold text-primary-foreground shadow-sm shadow-primary/30 transition-colors hover:bg-[#A93226]">Iscriviti Ora</a>

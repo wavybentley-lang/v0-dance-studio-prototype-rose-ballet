@@ -1,7 +1,6 @@
 "use client"
 
 import { Star } from "lucide-react"
-import { useEffect, useRef, useState } from "react"
 
 const reviews = [
   { name: "Tina Merolla", time: "2 anni fa", text: "Faccio questa recensione per elogiare il meraviglioso lavoro fatto dai maestri ogni giorno sui nostri figli. Un lavoro fatto di amore, dedizione, pazienza e rispetto. Rose Ballet e una scuola da consigliare per la bravura dei professionisti che ci lavorano e per lattenzione costante verso famiglie e allievi." },
@@ -10,19 +9,6 @@ const reviews = [
 ]
 
 export function TestimonialsSection() {
-  const [visibleCards, setVisibleCards] = useState<Set<number>>(new Set())
-  const cardRefs = useRef<(HTMLElement | null)[]>([])
-
-  useEffect(() => {
-    const observers: IntersectionObserver[] = []
-    cardRefs.current.forEach((el, index) => {
-      if (!el) return
-      const observer = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) { setVisibleCards((prev) => new Set([...prev, index])); observer.disconnect() } }, { threshold: 0.3 })
-      observer.observe(el); observers.push(observer)
-    })
-    return () => observers.forEach((o) => o.disconnect())
-  }, [])
-
   return (
     <section className="bg-[#050505] py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -32,12 +18,10 @@ export function TestimonialsSection() {
           <p className="max-w-none text-lg text-pretty text-muted-foreground lg:mx-auto lg:max-w-2xl">Le parole di chi vive ogni giorno l&apos;esperienza Rose Ballet.</p>
         </div>
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {reviews.map((review, index) => (
+          {reviews.map((review) => (
             <article
               key={review.name}
-              ref={(el) => { cardRefs.current[index] = el }}
-              className={`flex h-full flex-col rounded-xl border border-[rgba(212,175,55,0.25)] bg-[#0A0A0A] p-6 shadow-[0_18px_50px_rgba(0,0,0,0.35)] transition-all duration-700 ${visibleCards.has(index) ? "translate-y-0 opacity-100 animate-border-glow" : "translate-y-8 opacity-0"}`}
-              style={{ transitionDelay: visibleCards.has(index) ? `${index * 120}ms` : "0ms", transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+              className="flex h-full flex-col rounded-xl border border-[rgba(212,175,55,0.25)] bg-[#0A0A0A] p-6 shadow-[0_18px_50px_rgba(0,0,0,0.35)]"
             >
               <div className="mb-5 flex items-center justify-between gap-4">
                 <div className="flex gap-1 text-[#D4AF37]" aria-label="5 stelle">{Array.from({ length: 5 }).map((_, i) => (<Star key={i} size={17} fill="currentColor" />))}</div>

@@ -4,8 +4,6 @@ import Image from "next/image"
 import { ChevronRight } from "lucide-react"
 
 import { courseCategories } from "@/lib/site-config"
-import { useStagger } from "@/hooks/use-stagger"
-import { useTilt } from "@/hooks/use-tilt"
 
 type AnimatedSectionProps = {
   isVisible: boolean
@@ -17,31 +15,24 @@ type ClassesSectionProps = AnimatedSectionProps & {
   setCoursesExpanded: (expanded: boolean) => void
 }
 
-function TiltCourseCard({ course, isHiddenOnMobile, staggerVisible }: {
+function CourseCard({ course, isHiddenOnMobile }: {
   course: typeof courseCategories[number]["courses"][number]
   isHiddenOnMobile: boolean
-  staggerVisible: boolean
 }) {
-  const { cardRef, handleMouseMove, handleMouseLeave } = useTilt(5)
   const Icon = course.Icon
 
   return (
     <div
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className={`tilt-card group rounded-[1.5rem] border border-primary/10 bg-card p-5 shadow-sm shadow-primary/5 transition-[border-color,background,shadow,opacity,transform] duration-300 hover:border-primary/30 hover:bg-[var(--template-card-hover)] hover:shadow-xl hover:shadow-primary/10 ${isHiddenOnMobile ? "hidden md:block" : "block"} ${staggerVisible ? "translate-y-0 opacity-100" : "translate-y-5 opacity-0"}`}
-      style={{ transitionDuration: "600ms", transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+      className={`group rounded-[1.5rem] border border-primary/10 bg-card p-5 shadow-sm shadow-primary/5 transition-[border-color,background,box-shadow] duration-300 hover:border-primary/30 hover:bg-[var(--template-card-hover)] hover:shadow-xl hover:shadow-primary/10 ${isHiddenOnMobile ? "hidden md:block" : "block"}`}
     >
-      <div className="tilt-spotlight rounded-[1.5rem]" />
-      <div className="relative z-[2] mb-6 h-48 w-full overflow-hidden rounded-[1.15rem] bg-secondary">
+      <div className="relative mb-6 h-48 w-full overflow-hidden rounded-[1.15rem] bg-secondary">
         {course.image ? (
-          <Image src={course.image} alt={course.title} fill sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+          <Image src={course.image} alt={course.title} fill quality={72} sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/20 to-transparent"><Icon className="h-8 w-8 text-primary" /></div>
         )}
       </div>
-      <div className="relative z-[2]">
+      <div>
         <div className="mb-3 inline-block rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">{course.age}</div>
         <h3 className="mb-3 font-serif text-2xl font-bold text-foreground">{course.title}</h3>
         <p className="mb-4 text-pretty text-muted-foreground">{course.description}</p>
@@ -54,16 +45,10 @@ function TiltCourseCard({ course, isHiddenOnMobile, staggerVisible }: {
 }
 
 export function ClassesSection({ isVisible, setSectionRef, coursesExpanded, setCoursesExpanded }: ClassesSectionProps) {
-  const totalCourses = courseCategories.reduce((acc, c) => acc + c.courses.length, 0)
-  const { ref: staggerRef, visibleCount } = useStagger(totalCourses, 100)
-
   return (
     <section
       id="corsi"
-      ref={(element) => {
-        setSectionRef("corsi", element)
-        if (staggerRef) (staggerRef as React.MutableRefObject<HTMLElement | null>).current = element
-      }}
+      ref={(element) => { setSectionRef("corsi", element) }}
       style={{ background: "radial-gradient(ellipse at 80% 20%, #0F0F0F 0%, #080808 60%, #050505 100%)" }}
       className={`py-20 transition-all duration-700 sm:py-28 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"}`}
     >
@@ -82,7 +67,7 @@ export function ClassesSection({ isVisible, setSectionRef, coursesExpanded, setC
                 {category.courses.map((course, index) => {
                   const globalIndex = previousCoursesCount + index
                   const isHiddenOnMobile = !coursesExpanded && globalIndex >= 6
-                  return <TiltCourseCard key={course.title} course={course} isHiddenOnMobile={isHiddenOnMobile} staggerVisible={globalIndex < visibleCount} />
+                  return <CourseCard key={course.title} course={course} isHiddenOnMobile={isHiddenOnMobile} />
                 })}
               </div>
             </div>
